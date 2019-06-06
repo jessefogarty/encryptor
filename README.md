@@ -17,13 +17,20 @@ pip3 install -r requirements.txt
 
 ## Usage Example
 
-Please review the readme documentation and files in the /test/ subdirectory.
+```python
+python3 encryptor.py --mode encrypt --path test
+
+python3 encryptor.py --mode decrypt --path test/encrypted
+```
 
 
 
 
 ## Release history
 
+*0.2
+  * CLI added
+    * Supports encryption and decryption.
 * 0.1
   * hardcoded run
   * no cli
