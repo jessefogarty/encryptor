@@ -4,6 +4,7 @@ import gnupg
 import os
 from termcolor import cprint
 import getpass
+import argparse
 
 def encrypt_files(dloc, gpg_recv):
     # TODO: location selection - where are the files located?
@@ -62,7 +63,7 @@ def decrypt_files(dloc):
         stream = open(f, 'rb')
         dfile_name = os.path.splitext(f)[0]
         dfile = gpg.decrypt_file(stream, output=dfile_name)
-        print('{f} status: {dfile.status}')
+        print(f'{f} status: {dfile.status}')
 
 def sign_files():
     '''
@@ -96,22 +97,19 @@ def sign_files():
         # Move .sig files to /encrypted/
         #os.rename(x+".sig", "encrypted/"+ x +".sig")
 
+def cli():
+    parser = argparse.ArgumentParser(description='Encrypt files in a directory for a recipient.')
+    parser.add_argument('--mode', help='Select run mode: encrypt or decrypt', metavar='<MODE>', nargs=1)
+    parser.add_argument('--path', help='Path to directory', metavar='<PATH>', nargs=1)
+    args = parser.parse_args()
+    mode = args.mode[0] ; path = args.path[0]
+    if args.mode[0] == 'encrypt':
+        gpg_recv = input('Enter a recipient email address for encryption: ')
+        encrypt_files(path, gpg_recv)
+    elif args.mode[0] == 'decrypt':
+        decrypt_files(args.path[0])
+    else:
+        print(f'Invalid argument: < --mode {args.mode[0]} > supplied. Please try again.')
 
 if __name__ == "__main__":
-    print('Welcome to Encryptor(). Select a run mode:')
-    print('1) Encrypt a directory \n2) Decrypt a directory')
-    run = input('Selection: ')
-    if int(run) == 1:
-        dloc = input('Enter location of the directory to encrypt: ')
-        gpg_recv = input('Enter a recipient email address for encryption: ')
-        # TODO: add directory selection here.
-        encrypt_files(dloc, gpg_recv)
-        print('Create a signature file for newly created encrypted files?')
-        print('1 - Yes   /   2 - No')
-        run = input('Selection: ')
-        if int(run) == 1:
-            sign_files()
-    elif int(run) == 2:
-        decrypt_files('encrypted')
-    else:
-        cprint('Invalid selection, exiting...', 'red')
+    cli()
