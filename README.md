@@ -28,7 +28,7 @@ python3 encryptor.py --mode decrypt --path test/encrypted
 
 ## Release history
 
-*0.2
+* 0.2
   * CLI added
     * Supports encryption and decryption.
 * 0.1
